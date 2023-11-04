@@ -6,7 +6,6 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // get all products
 router.get('/', async (req, res) => {
   // find all products
-  
   try {
     const productData = await Product.findAll({
       include: [{ model: Category }, { model: Tag }],
@@ -26,8 +25,11 @@ router.get('/:id', async (req, res) => {
       include: [{ model: Category }, { model: Tag }],
     });
 
-    if (productData) res.status(200).json(productData);
-    else res.status(404).json({ message: 'invalid id' });
+    if (!productData){
+      res.status(404).json({ message: "invalid id" });
+      return;
+    } 
+    else res.status(200).json(productData);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -124,8 +126,7 @@ router.delete('/:id', async (req, res) => {
       res.status(404).json({ message: 'invalid id' });
       return;
     }
-
-    res.status(200).json(productData);
+    else res.status(200).json(productData);
   } catch (err) {
     res.status(400).json(err);
   }
